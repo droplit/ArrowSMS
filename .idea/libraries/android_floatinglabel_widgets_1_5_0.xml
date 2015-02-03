@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="android-floatinglabel-widgets-1.5.0">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.marvinlabs/android-floatinglabel-widgets/1.5.0/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.marvinlabs/android-floatinglabel-widgets/1.5.0/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
