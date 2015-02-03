@@ -58,8 +58,11 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.messaging, container, false);
             return rootView;
         }
+    }
+    public void send(View view) {
+        LayoutInflater rMessage = activity.getLayoutInflater();
     }
 }
