@@ -2,6 +2,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.droplit.texcellent" >
 
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_MMS"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.provider.Telephony.SMS_RECEIVED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -17,17 +33,26 @@
             </intent-filter>
         </activity>
 
+        <service android:name="com.android.mms.transaction.TransactionService"/>
+
+        <receiver android:name="com.klinker.android.send_message.SentReceiver" >
+            <intent-filter>
+                <action android:name="com.droplit.texcellent.SMS_SENT" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.klinker.android.send_message.DeliveredReceiver" >
+            <intent-filter>
+                <action android:name="com.droplit.texcellent.SMS_DELIVERED" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".HeadlessSmsSendService"
             android:enabled="true"
             android:exported="true" >
         </service>
 
-        <receiver
-            android:name=".MmsReciever"
-            android:enabled="true"
-            android:exported="true" >
-        </receiver>
         <receiver
             android:name=".MmsReceiver"
             android:enabled="true"
@@ -36,8 +61,7 @@
 
         <activity
             android:name=".Settings"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity" >
+            android:label="@string/title_activity_settings" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.droplit.texcellent.MainActivity" />
