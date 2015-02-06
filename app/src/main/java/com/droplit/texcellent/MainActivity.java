@@ -137,7 +137,7 @@ public class MainActivity extends Activity {
         if (imageToSend.isEnabled()) {
             imageToSend.setEnabled(false);
             imageToSend.setAlpha(0.3f);
-        } else {
+        } else{
             imageToSend.setEnabled(true);
             imageToSend.setAlpha(1.0f);
         }
@@ -161,9 +161,11 @@ public class MainActivity extends Activity {
                     message.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
                 }
 
+                logAdapter.addItem("Sent: " + messageField.getText().toString());
                 transaction.sendNewMessage(message, Transaction.NO_THREAD_ID);
                 Toast.makeText(getApplicationContext(),"Message Sent", Toast.LENGTH_SHORT).show();
                 DeliveredReceiver deliveredReceiver = new DeliveredReceiver();
+                messageField.setText("");
             }
         }).start();
     }
