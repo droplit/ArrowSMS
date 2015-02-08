@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.Telephony;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,7 +26,7 @@ import com.klinker.android.send_message.Utils;
 
 import java.util.ArrayList;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
     private Settings settings;
 
@@ -47,6 +50,31 @@ public class MainActivity extends Activity {
         initViews();
         initActions();
         initLogging();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        //menu.getItem(1).setEnabled(false);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_set_default) {
+            initActions();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void initSettings() {
@@ -131,6 +159,7 @@ public class MainActivity extends Activity {
         intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
                 getPackageName());
         startActivity(intent);
+        Log.d("Default", "Set as default SMS app");
     }
 
     private void toggleSendImage() {
@@ -164,8 +193,9 @@ public class MainActivity extends Activity {
                 logAdapter.addItem("Sent: " + messageField.getText().toString());
                 transaction.sendNewMessage(message, Transaction.NO_THREAD_ID);
                 Toast.makeText(getApplicationContext(),"Message Sent", Toast.LENGTH_SHORT).show();
+                Log.d("Message", "Sent");
                 DeliveredReceiver deliveredReceiver = new DeliveredReceiver();
-                messageField.setText("");
+                //messageField.setText("");
             }
         }).start();
     }

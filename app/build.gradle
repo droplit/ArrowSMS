@@ -26,6 +26,7 @@ dependencies {
     compile 'com.github.jenzz.undobar:library:1.2:api15Release@aar'
     compile 'com.klinkerapps:android-smsmms:+'
     compile 'com.klinkerapps:logger:+'
+    compile 'com.klinkerapps:android-chips:+@aar'
     compile 'com.android.support:support-v4:21.0.0'
     compile 'com.melnykov:floatingactionbutton:1.0.7'
     compile 'com.nispok:snackbar:2.2.1'
