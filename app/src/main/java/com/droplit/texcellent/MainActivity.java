@@ -1,9 +1,11 @@
 package com.droplit.texcellent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Telephony;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,10 +17,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.ex.chips.BaseRecipientAdapter;
+import com.android.ex.chips.RecipientEditTextView;
+import com.android.ex.chips.recipientchip.DrawableRecipientChip;
+import com.gc.materialdesign.widgets.ColorSelector;
 import com.klinker.android.logger.Log;
 import com.klinker.android.send_message.ApnUtils;
 import com.klinker.android.send_message.DeliveredReceiver;
@@ -33,7 +40,7 @@ public class MainActivity extends ActionBarActivity {
 
     private Settings settings;
 
-    private EditText toField;
+    private RecipientEditTextView toField;
     private ImageView imageToSend;
     private RecyclerView log;
     private Button sendButton;
@@ -53,6 +60,24 @@ public class MainActivity extends ActionBarActivity {
         initViews();
         initActions();
         initLogging();
+        toField =
+                (RecipientEditTextView) findViewById(R.id.to);
+        toField.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        BaseRecipientAdapter adapter = new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, this);
+        adapter.setShowMobileOnly(true);
+        toField.setAdapter(adapter);
+        toField.dismissDropDownOnItemSelected(true);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DrawableRecipientChip[] chips = toField.getSortedRecipients();
+                for (DrawableRecipientChip chip : chips) {
+                    Log.v("DrawableChip", chip.getEntry().getDisplayName() + " " + chip.getEntry().getDestination());
+                }
+            }
+        }, 5000);
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -101,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initViews() {
-        toField = (EditText) findViewById(R.id.to);
+        //toField = (EditText) findViewById(R.id.to);
         imageToSend = (ImageView) findViewById(R.id.image);
         log = (RecyclerView) findViewById(R.id.log);
         sendButton = (Button) findViewById(R.id.sendButton);
@@ -111,7 +136,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void initActions() {
 
-        toField.setText(Utils.getMyPhoneNumber(this));
+        //toField.setText(Utils.getMyPhoneNumber(this));
 
         imageToSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,11 +187,11 @@ public class MainActivity extends ActionBarActivity {
 
     public void sendMessage() {
 
-        if (toField.getText().toString().isEmpty()) {
+        /* (toField.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Please enter a number", Toast.LENGTH_LONG).show();
             Log.d("Message", "No phone number was inputted");
             return;
-        }
+        }*/
 
         if (messageField.getText().toString().isEmpty()) {
             Toast.makeText(getApplicationContext(), "Please enter a message", Toast.LENGTH_LONG).show();
@@ -194,7 +219,8 @@ public class MainActivity extends ActionBarActivity {
 
                     Transaction transaction = new Transaction(MainActivity.this, sendSettings);
 
-                    Message message = new Message(messageField.getText().toString(), toField.getText().toString());
+                    Message message = new Message(messageField.getText().toString(), toField.getText().toString().replace(",","").replace("(", "").replace(")", "")
+                                                                .replace("-", "").replace(" ",""));
                     message.setType(Message.TYPE_SMSMMS);
 
                     if (imageEnabled) {
@@ -202,7 +228,8 @@ public class MainActivity extends ActionBarActivity {
                     }
 
                     transaction.sendNewMessage(message, Transaction.NO_THREAD_ID);
-                    Log.d("Message", "Sent");
+                    Log.d("Message", "Sent to "+ toField.getText().toString().replace(",","").replace("(","").replace(")","")
+                                                            .replace("-", "").replace(" ", ""));
                     DeliveredReceiver deliveredReceiver = new DeliveredReceiver();
                 }
             }).start();
