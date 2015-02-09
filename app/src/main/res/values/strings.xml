@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
     <string name="action_set_default">Set As Default</string>
+    <string name="action_apns">Select APNs</string>
 
 
 </resources>

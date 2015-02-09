@@ -15,14 +15,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.klinker.android.logger.Log;
 import com.klinker.android.send_message.ApnUtils;
 import com.klinker.android.send_message.DeliveredReceiver;
 import com.klinker.android.send_message.Message;
 import com.klinker.android.send_message.Transaction;
 import com.klinker.android.send_message.Utils;
+import com.nispok.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -30,16 +33,16 @@ public class MainActivity extends ActionBarActivity {
 
     private Settings settings;
 
-    private Button setDefaultAppButton;
-    private Button selectApns;
-    private EditText fromField;
     private EditText toField;
-    private EditText messageField;
     private ImageView imageToSend;
-    private Button sendButton;
     private RecyclerView log;
+    private Button sendButton;
+    private EditText messageField;
+    private TextView textView;
 
     private LogAdapter logAdapter;
+
+    private boolean imageEnabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,26 +58,29 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        //menu.getItem(1).setEnabled(false);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Toast.makeText(getApplicationContext(),"Settings", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_default_text:
+                Toast.makeText(getApplicationContext(),"Set as Default", Toast.LENGTH_SHORT).show();
+                setDefaultSmsApp();
+                return true;
+            case R.id.action_init_apns:
+                Toast.makeText(getApplicationContext(),"Select Apns", Toast.LENGTH_SHORT).show();
+                initApns();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        if (id == R.id.action_set_default) {
-            initActions();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void initSettings() {
@@ -95,36 +101,16 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initViews() {
-        setDefaultAppButton = (Button) findViewById(R.id.set_as_default);
-        selectApns = (Button) findViewById(R.id.apns);
-        fromField = (EditText) findViewById(R.id.from);
         toField = (EditText) findViewById(R.id.to);
-        messageField = (EditText) findViewById(R.id.message);
         imageToSend = (ImageView) findViewById(R.id.image);
-        sendButton = (Button) findViewById(R.id.send);
         log = (RecyclerView) findViewById(R.id.log);
+        sendButton = (Button) findViewById(R.id.sendButton);
+        messageField = (EditText) findViewById(R.id.messageBodyField);
+        textView = (TextView) findViewById(R.id.toggleImageText);
     }
 
     private void initActions() {
-        if (Utils.isDefaultSmsApp(this)) {
-            setDefaultAppButton.setVisibility(View.GONE);
-        } else {
-            setDefaultAppButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setDefaultSmsApp();
-                }
-            });
-        }
 
-        selectApns.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initApns();
-            }
-        });
-
-        fromField.setText(Utils.getMyPhoneNumber(this));
         toField.setText(Utils.getMyPhoneNumber(this));
 
         imageToSend.setOnClickListener(new View.OnClickListener() {
@@ -153,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void setDefaultSmsApp() {
-        setDefaultAppButton.setVisibility(View.GONE);
+        //setDefaultAppButton.setVisibility(View.GONE);
         Intent intent =
                 new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
         intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME,
@@ -163,41 +149,86 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void toggleSendImage() {
-        if (imageToSend.isEnabled()) {
-            imageToSend.setEnabled(false);
+        if (imageEnabled) {
             imageToSend.setAlpha(0.3f);
+            imageEnabled = false;
+            textView.setText("Disabled");
         } else{
-            imageToSend.setEnabled(true);
             imageToSend.setAlpha(1.0f);
+            imageEnabled = true;
+            textView.setText("Enabled");
         }
     }
 
     public void sendMessage() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                com.klinker.android.send_message.Settings sendSettings = new com.klinker.android.send_message.Settings();
-                sendSettings.setMmsc(settings.getMmsc());
-                sendSettings.setProxy(settings.getMmsProxy());
-                sendSettings.setPort(settings.getMmsPort());
 
-                Transaction transaction = new Transaction(MainActivity.this, sendSettings);
+        if (toField.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Please enter a number", Toast.LENGTH_LONG).show();
+            Log.d("Message", "No phone number was inputted");
+            return;
+        }
 
-                Message message = new Message(messageField.getText().toString(), toField.getText().toString());
-                message.setType(Message.TYPE_SMSMMS);
+        if (messageField.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Please enter a message", Toast.LENGTH_LONG).show();
+            Log.d("Message", "It was empty.");
+            return;
+        }
 
-                if (imageToSend.isEnabled()) {
-                    message.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+        if (Utils.isDefaultSmsApp(this)) {
+            // TODO: Use SmsManager to send SMS and then record the message in the system SMS
+            // ContentProvider
+            Snackbar.with(getApplicationContext()) // context
+                    .text("Text Sent") // text to display
+                    .show(this); // activity where it is displayed
+
+            logAdapter.addItem("Sent: " + messageField.getText().toString());
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    com.klinker.android.send_message.Settings sendSettings = new com.klinker.android.send_message.Settings();
+                    sendSettings.setMmsc(settings.getMmsc());
+                    sendSettings.setProxy(settings.getMmsProxy());
+                    sendSettings.setPort(settings.getMmsPort());
+
+                    Transaction transaction = new Transaction(MainActivity.this, sendSettings);
+
+                    Message message = new Message(messageField.getText().toString(), toField.getText().toString());
+                    message.setType(Message.TYPE_SMSMMS);
+
+                    if (imageEnabled) {
+                        message.setImage(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+                    }
+
+                    transaction.sendNewMessage(message, Transaction.NO_THREAD_ID);
+                    Log.d("Message", "Sent");
+                    DeliveredReceiver deliveredReceiver = new DeliveredReceiver();
                 }
+            }).start();
 
-                logAdapter.addItem("Sent: " + messageField.getText().toString());
-                transaction.sendNewMessage(message, Transaction.NO_THREAD_ID);
-                Toast.makeText(getApplicationContext(),"Message Sent", Toast.LENGTH_SHORT).show();
-                Log.d("Message", "Sent");
-                DeliveredReceiver deliveredReceiver = new DeliveredReceiver();
-                //messageField.setText("");
-            }
-        }).start();
+            messageField.setText("");
+        } else {
+            // TODO: Notify the user the app is not default and provide a way to trigger
+            // Utils.setDefaultSmsApp() so they can set it.
+            new MaterialDialog.Builder(this)
+                    .title("Default SMS")
+                    .content("%AppName needs to be your default SMS app to do that.")
+                    .positiveText("Set Now")
+                    .negativeText("Later")
+                    .callback(new MaterialDialog.ButtonCallback() {
+                        @Override
+                        public void onPositive(MaterialDialog dialog) {
+                            setDefaultSmsApp();
+                        }
+
+                        @Override
+                        public void onNegative(MaterialDialog dialog) {
+                            Toast.makeText(getApplicationContext(),
+                                    "You cannot send texts until default is set.", Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .show();
+        }
     }
-
 }
