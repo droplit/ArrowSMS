@@ -98,6 +98,7 @@
                 <data android:scheme="mmsto" />
             </intent-filter>
         </service>
+
     </application>
 
 </manifest>

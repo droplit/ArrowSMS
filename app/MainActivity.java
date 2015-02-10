@@ -1,7 +1,6 @@
 package com.droplit.texcellent;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.ex.chips.BaseRecipientAdapter;
 import com.android.ex.chips.RecipientEditTextView;
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
-import com.gc.materialdesign.widgets.ColorSelector;
 import com.klinker.android.logger.Log;
 import com.klinker.android.send_message.ApnUtils;
 import com.klinker.android.send_message.DeliveredReceiver;
@@ -34,14 +32,13 @@ import com.klinker.android.send_message.Transaction;
 import com.klinker.android.send_message.Utils;
 import com.nispok.snackbar.Snackbar;
 
-
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
     private Settings settings;
 
-    private RecipientEditTextView toField;
+    private EditText toField;
     private ImageView imageToSend;
     private RecyclerView log;
     private Button sendButton;
@@ -57,12 +54,11 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         initSettings();
         initViews();
         initActions();
         initLogging();
-        toField =
+        final RecipientEditTextView toField =
                 (RecipientEditTextView) findViewById(R.id.to);
         toField.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         BaseRecipientAdapter adapter = new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, this);
@@ -221,8 +217,7 @@ public class MainActivity extends ActionBarActivity {
 
                     Transaction transaction = new Transaction(MainActivity.this, sendSettings);
 
-                    Message message = new Message(messageField.getText().toString(), toField.getText().toString().replace(",","").replace("(", "").replace(")", "")
-                                                                .replace("-", "").replace(" ",""));
+                    Message message = new Message(messageField.getText().toString(), toField.getText().toString());
                     message.setType(Message.TYPE_SMSMMS);
 
                     if (imageEnabled) {
@@ -230,8 +225,7 @@ public class MainActivity extends ActionBarActivity {
                     }
 
                     transaction.sendNewMessage(message, Transaction.NO_THREAD_ID);
-                    Log.d("Message", "Sent to "+ toField.getText().toString().replace(",","").replace("(","").replace(")","")
-                                                            .replace("-", "").replace(" ", ""));
+                    Log.d("Message", "Sent");
                     DeliveredReceiver deliveredReceiver = new DeliveredReceiver();
                 }
             }).start();
