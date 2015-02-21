@@ -37,6 +37,8 @@ import com.klinker.android.send_message.DeliveredReceiver;
 import com.klinker.android.send_message.Message;
 import com.klinker.android.send_message.Transaction;
 import com.klinker.android.send_message.Utils;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.ui.LibsActivity;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -90,12 +92,12 @@ public class MainActivity extends ActionBarActivity {
                 .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_action_bar).withIcon(FontAwesome.Icon.faw_home),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_multi_drawer).withIcon(FontAwesome.Icon.faw_gamepad).withIdentifier(2),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_non_translucent_status_drawer).withIcon(FontAwesome.Icon.faw_eye).withIdentifier(3),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_info).withIdentifier(3),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_non_translucent_status_drawer).withIcon(FontAwesome.Icon.faw_eye),
                         new SectionDrawerItem().withName(R.string.drawer_item_section_header),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(1),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_question).setEnabled(false),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_open_source),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github).withIdentifier(2),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_bullhorn)
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -108,6 +110,34 @@ public class MainActivity extends ActionBarActivity {
                         if (drawerItem.getIdentifier() == 1) {
                             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                             MainActivity.this.startActivity(intent);
+                        } else if (drawerItem.getIdentifier() == 2) {
+                            String url = "https://github.com/jpinz/ArrowSMS";
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(url));
+                            MainActivity.this.startActivity(intent);
+                        } else if (drawerItem.getIdentifier() == 3) {
+                            //Create an intent with context and the Activity class
+                            Intent i = new Intent(getApplicationContext(), LibsActivity.class);
+                            //Pass the fields of your application to the lib so it can find all external lib information
+                            i.putExtra(Libs.BUNDLE_FIELDS, Libs.toStringArray(R.string.class.getFields()));
+                            //Define the libs you want (only those which don't include the information, and are not autoDetected)
+                            //(OPTIONAL if all used libraries offer the information, or are autoDetected)
+                            i.putExtra(Libs.BUNDLE_LIBS, new String[]{"FloatingActionButton", "snackbar", "smsmms"});
+
+                            //Display the library version (OPTIONAL)
+                            i.putExtra(Libs.BUNDLE_VERSION, true);
+                            //Display the library license (OPTIONAL
+                            i.putExtra(Libs.BUNDLE_LICENSE, true);
+
+                            //Set a title (OPTIONAL)
+                            i.putExtra(Libs.BUNDLE_TITLE, "About This App");
+
+                            //Pass your theme (OPTIONAL)
+                            i.putExtra(Libs.BUNDLE_THEME, R.style.Theme_AppCompat);
+                            //Pass a custom accent color (OPTIONAL)
+
+                            //start the activity
+                            startActivity(i);
                         }
 
                     }

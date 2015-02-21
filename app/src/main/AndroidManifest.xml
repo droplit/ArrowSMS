@@ -103,6 +103,18 @@
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about" >
+        </activity>
+        <activity
+            android:name=".ExtendActivity"
+            android:label="@string/title_activity_extend" >
+        </activity>
+        <activity
+            android:name=".FragmentActivity"
+            android:label="@string/title_activity_fragment" >
+        </activity>
     </application>
 
 </manifest>
