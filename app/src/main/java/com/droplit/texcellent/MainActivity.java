@@ -1,13 +1,16 @@
 package com.droplit.texcellent;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Telephony;
 import android.support.v7.app.ActionBarActivity;
@@ -54,6 +57,7 @@ import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.nispok.snackbar.Snackbar;
 
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
@@ -73,6 +77,8 @@ public class MainActivity extends ActionBarActivity {
 
     private static int RESULT_LOAD_IMAGE = 1;
 
+    private Drawer.Result result = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,17 +92,18 @@ public class MainActivity extends ActionBarActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        new Drawer()
+        result = new Drawer()
                 .withActivity(this)
                 .withToolbar(toolbar)
+                //.withHeader(R.layout.header)
                 .withActionBarDrawerToggle(true)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_action_bar).withIcon(FontAwesome.Icon.faw_home),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_info).withIdentifier(3),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_non_translucent_status_drawer).withIcon(FontAwesome.Icon.faw_eye),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_msg).withIcon(FontAwesome.Icon.faw_plus).withIdentifier(4),
                         new SectionDrawerItem().withName(R.string.drawer_item_section_header),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(1),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(FontAwesome.Icon.faw_question).setEnabled(false),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_multi).withIcon(FontAwesome.Icon.faw_gamepad).withIdentifier(5),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github).withIdentifier(2),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_bullhorn)
                 )
@@ -138,6 +145,9 @@ public class MainActivity extends ActionBarActivity {
 
                             //start the activity
                             startActivity(i);
+                        } else if (drawerItem.getIdentifier() == 4) {
+                            Intent intent = new Intent(MainActivity.this, MessageListFragment.class);
+                            startActivity(intent);
                         }
 
                     }
@@ -376,4 +386,5 @@ public class MainActivity extends ActionBarActivity {
                     .show();
         }
     }
+
 }
