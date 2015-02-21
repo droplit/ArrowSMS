@@ -113,6 +113,7 @@ MERGED from com.marvinlabs:android-floatinglabel-widgets:1.5.0:11:5
 MERGED from com.afollestad:material-dialogs:0.6.2.3:12:5
 MERGED from com.android.support:appcompat-v7:21.0.3:16:5
 MERGED from com.android.support:support-v4:21.0.3:16:5
+MERGED from com.github.navasmdc:MaterialDesign:1.4:11:5
 	android:label
 		ADDED from AndroidManifest.xml:43:9
 	android:allowBackup
@@ -221,6 +222,7 @@ MERGED from com.marvinlabs:android-floatinglabel-widgets:1.5.0:7:5
 MERGED from com.afollestad:material-dialogs:0.6.2.3:8:5
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5
 MERGED from com.android.support:support-v4:21.0.3:15:5
+MERGED from com.github.navasmdc:MaterialDesign:1.4:7:5
 	android:targetSdkVersion
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
