@@ -125,6 +125,9 @@ public class MainActivity extends ActionBarActivity {
                 return true;
             case R.id.action_dialog:
                 showDialog();
+            case R.id.action_msg:
+                Intent i = new Intent(getApplicationContext(),MessagingActivity.class);
+                startActivity(i);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -336,5 +339,6 @@ public class MainActivity extends ActionBarActivity {
                     .show();
         }
     }
+
 
 }

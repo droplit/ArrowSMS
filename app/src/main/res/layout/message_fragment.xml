@@ -30,5 +30,4 @@
         android:divider="@android:color/darker_gray"
         android:dividerHeight="0dp"
         android:background="@android:color/background_light" />
-    
 </com.droplit.texcellent.FragmentNavigationDrawer>

@@ -1,23 +1,27 @@
 package com.droplit.texcellent;
 
 import android.content.res.Configuration;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.droplit.texcellent.fragments.FirstFragment;
+import com.droplit.texcellent.fragments.SecondFragment;
+import com.droplit.texcellent.fragments.ThirdFragment;
 
-public class NavDrawerActivity extends ActionBarActivity {
-
+public class MessagingActivity   extends ActionBarActivity {
     private FragmentNavigationDrawer dlDrawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nav_drawer);
+        setContentView(R.layout.message_fragment);
 
         // Set a ToolBar to replace the ActionBar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -27,9 +31,11 @@ public class NavDrawerActivity extends ActionBarActivity {
         dlDrawer = (FragmentNavigationDrawer) findViewById(R.id.drawer_layout);
         // Setup drawer view
         dlDrawer.setupDrawerConfiguration((ListView) findViewById(R.id.lvDrawer), toolbar,
-                R.layout.drawer_list_item, R.id.flContent);
+                R.layout.drawer_nav_item, R.id.flContent);
         // Add nav items
-        dlDrawer.addNavItem("First", "First Fragment", Messaging.class);
+        dlDrawer.addNavItem("First", 2,"First Fragment",FirstFragment.class);
+        dlDrawer.addNavItem("Second", 3, "Second Fragment", SecondFragment.class);
+        dlDrawer.addNavItem("Third", 4, "Third Fragment", ThirdFragment.class);
         // Select default
         if (savedInstanceState == null) {
             dlDrawer.selectDrawerItem(0);

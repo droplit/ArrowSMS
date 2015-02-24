@@ -3,6 +3,8 @@
                 android:layout_height="match_parent"
                 android:id="@+id/mainView"
                 >
+
+
     
         <ListView
             android:id="@+id/listMessages"

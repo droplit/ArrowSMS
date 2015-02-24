@@ -94,12 +94,8 @@
             android:label="@string/title_activity_about" >
         </activity>
         <activity
-            android:name=".MessageListFragment"
-            android:label="@string/title_activity_fragment" >
-        </activity>
-        <activity
-            android:name=".NavDrawerActivity"
-            android:label="@string/title_activity_nav_drawer" >
+            android:name=".MessagingActivity"
+            android:label="@string/messaging" >
         </activity>
     </application>
 

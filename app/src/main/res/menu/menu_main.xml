@@ -9,4 +9,6 @@
         android:orderInCategory="200" app:showAsAction="never" />
     <item android:id="@+id/action_dialog" android:title="@string/show_dialog"
         android:orderInCategory="200" app:showAsAction="never" />
+    <item android:id="@+id/action_msg" android:title="@string/messaging"
+        android:orderInCategory="200" app:showAsAction="never" />
 </menu>
