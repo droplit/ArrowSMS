@@ -19,7 +19,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-
     <uses-feature
         android:glEsVersion="0x00020000"
         android:required="true" />
@@ -99,8 +98,8 @@
             android:label="@string/title_activity_fragment" >
         </activity>
         <activity
-            android:name=".MultiDrawerActivity"
-            android:label="@string/drawer_item_multi" >
+            android:name=".NavDrawerActivity"
+            android:label="@string/title_activity_nav_drawer" >
         </activity>
     </application>
 

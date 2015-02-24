@@ -27,10 +27,8 @@
     <string name="action_extendactivity">Extended Activity</string>
     <string name="action_customactivity">Custom Activity</string>
 
-    <string name="action_all">(Cust) All Libraries</string>
-    <string name="action_internal">(Cust) Internal Libraries</string>
-    <string name="action_external">(Cust) External Libraries</string>
-    <string name="action_defined">(Cust) Defined Libraries</string>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 
     <string name="action_opensource">Open Source</string>
 
@@ -49,10 +47,13 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-    <string name="action_websearch">Web search</string>
-    <string name="app_not_available">Sorry, there\'s no web browser available</string>
+    <string name="title_activity_nav_drawer">ArrowSMS</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="quick_reply">Quick Reply</string>
+    <string name="show_dialog">Show Dialog</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

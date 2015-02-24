@@ -31,6 +31,7 @@ public class SmsReceiver extends BroadcastReceiver {
                 .build();
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(1, notification);
+        
     }
 
 }

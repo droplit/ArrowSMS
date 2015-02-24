@@ -1,8 +1,12 @@
 package com.droplit.texcellent;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -13,11 +17,14 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.provider.Telephony;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,31 +40,16 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.ex.chips.BaseRecipientAdapter;
 import com.android.ex.chips.RecipientEditTextView;
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
-import com.gc.materialdesign.widgets.ColorSelector;
 import com.klinker.android.logger.Log;
 import com.klinker.android.send_message.ApnUtils;
 import com.klinker.android.send_message.DeliveredReceiver;
 import com.klinker.android.send_message.Message;
 import com.klinker.android.send_message.Transaction;
 import com.klinker.android.send_message.Utils;
-import com.mikepenz.aboutlibraries.Libs;
-import com.mikepenz.aboutlibraries.ui.LibsActivity;
-import com.mikepenz.iconics.typeface.FontAwesome;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.Nameable;
-
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 
 
 import com.nispok.snackbar.Snackbar;
 
-
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
@@ -77,84 +69,12 @@ public class MainActivity extends ActionBarActivity {
 
     private static int RESULT_LOAD_IMAGE = 1;
 
-    private Drawer.Result result = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        result = new Drawer()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                //.withHeader(R.layout.header)
-                .withActionBarDrawerToggle(true)
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_action_bar).withIcon(FontAwesome.Icon.faw_home),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_info).withIdentifier(3),
-                        new PrimaryDrawerItem().withName(R.string.drawer_item_msg).withIcon(FontAwesome.Icon.faw_plus).withIdentifier(4),
-                        new SectionDrawerItem().withName(R.string.drawer_item_section_header),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings).withIcon(FontAwesome.Icon.faw_cog).withIdentifier(1),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_multi).withIcon(FontAwesome.Icon.faw_gamepad).withIdentifier(5),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_open_source).withIcon(FontAwesome.Icon.faw_github).withIdentifier(2),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_contact).withIcon(FontAwesome.Icon.faw_bullhorn)
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-                        if (drawerItem instanceof Nameable) {
-                            Toast.makeText(MainActivity.this, MainActivity.this.getString(((Nameable) drawerItem).getNameRes()), Toast.LENGTH_SHORT).show();
-                        }
-
-                        if (drawerItem.getIdentifier() == 1) {
-                            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                            MainActivity.this.startActivity(intent);
-                        } else if (drawerItem.getIdentifier() == 2) {
-                            String url = "https://github.com/jpinz/ArrowSMS";
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setData(Uri.parse(url));
-                            MainActivity.this.startActivity(intent);
-                        } else if (drawerItem.getIdentifier() == 3) {
-                            //Create an intent with context and the Activity class
-                            Intent i = new Intent(getApplicationContext(), LibsActivity.class);
-                            //Pass the fields of your application to the lib so it can find all external lib information
-                            i.putExtra(Libs.BUNDLE_FIELDS, Libs.toStringArray(R.string.class.getFields()));
-                            //Define the libs you want (only those which don't include the information, and are not autoDetected)
-                            //(OPTIONAL if all used libraries offer the information, or are autoDetected)
-                            i.putExtra(Libs.BUNDLE_LIBS, new String[]{"FloatingActionButton", "snackbar", "smsmms"});
-
-                            //Display the library version (OPTIONAL)
-                            i.putExtra(Libs.BUNDLE_VERSION, true);
-                            //Display the library license (OPTIONAL
-                            i.putExtra(Libs.BUNDLE_LICENSE, true);
-
-                            //Set a title (OPTIONAL)
-                            i.putExtra(Libs.BUNDLE_TITLE, "About This App");
-
-                            //Pass your theme (OPTIONAL)
-                            i.putExtra(Libs.BUNDLE_THEME, R.style.Theme_AppCompat);
-                            //Pass a custom accent color (OPTIONAL)
-
-                            //start the activity
-                            startActivity(i);
-                        } else if (drawerItem.getIdentifier() == 4) {
-                            Intent intent = new Intent(MainActivity.this, MessageListFragment.class);
-                            startActivity(intent);
-                        }
-
-                    }
-                })
-                .withSavedInstance(savedInstanceState)
-                .build();
-
 
         initSettings();
         initViews();
@@ -203,8 +123,38 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(),"Select Apns", Toast.LENGTH_SHORT).show();
                 initApns();
                 return true;
+            case R.id.action_dialog:
+                showDialog();
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    public void showDialog() {
+        DialogFragment newFragment = QuickReply.newInstance(
+                R.string.quick_reply);
+        newFragment.show(getFragmentManager(), "dialog");
+    }
+    public static class QuickReply extends DialogFragment {
+
+        public static QuickReply newInstance(int title) {
+            QuickReply frag = new QuickReply();
+            Bundle args = new Bundle();
+            args.putInt("title", title);
+            frag.setArguments(args);
+            return frag;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater = getActivity().getLayoutInflater();
+
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            builder.setView(inflater.inflate(R.layout.quick_reply, null));
+            return builder.create();
         }
     }
 
