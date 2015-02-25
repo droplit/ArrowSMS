@@ -40,6 +40,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.android.ex.chips.BaseRecipientAdapter;
 import com.android.ex.chips.RecipientEditTextView;
 import com.android.ex.chips.recipientchip.DrawableRecipientChip;
+import com.droplit.texcellent.services.ChatHeadService;
 import com.klinker.android.logger.Log;
 import com.klinker.android.send_message.ApnUtils;
 import com.klinker.android.send_message.DeliveredReceiver;
@@ -128,6 +129,8 @@ public class MainActivity extends ActionBarActivity {
             case R.id.action_msg:
                 Intent i = new Intent(getApplicationContext(),MessagingActivity.class);
                 startActivity(i);
+            case R.id.action_head:
+                startService(new Intent(getApplicationContext(), ChatHeadService.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

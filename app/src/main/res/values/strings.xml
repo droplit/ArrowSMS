@@ -55,6 +55,7 @@
     <string name="show_dialog">Show Dialog</string>
     <string name="cancel">Cancel</string>
     <string name="messaging">Messaging</string>
+    <string name="head">Bubble</string>
 
 
 </resources>

@@ -11,4 +11,7 @@
         android:orderInCategory="200" app:showAsAction="never" />
     <item android:id="@+id/action_msg" android:title="@string/messaging"
         android:orderInCategory="200" app:showAsAction="never" />
+    <item android:id="@+id/action_head" android:title="@string/head"
+        android:orderInCategory="200" app:showAsAction="never" />
+
 </menu>

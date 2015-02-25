@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -97,6 +99,12 @@
             android:name=".MessagingActivity"
             android:label="@string/messaging" >
         </activity>
+
+        <service
+            android:name=".services.ChatHeadService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
